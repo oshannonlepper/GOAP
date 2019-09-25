@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "AStar.h"
 #include "PlannerBasic.h"
 #include "WorldStateBasic.h"
 

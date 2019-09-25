@@ -14,3 +14,18 @@ bool GOAP::CActionPreConditionBasic::IsConditionMet(IWorldState* WorldState) con
 
 	return true;
 }
+
+float GOAP::CActionPreConditionBasic::GetNumConditionsNotMet(IWorldState* WorldState) const
+{
+	float ReturnValue = 0.0f;
+
+	for (const auto& Pair : Requirements)
+	{
+		if (WorldState->GetValue(Pair.first) != Pair.second)
+		{
+			ReturnValue += 1.0f;
+		}
+	}
+
+	return ReturnValue;
+}

@@ -45,5 +45,13 @@ namespace GOAP
 		 * Called by the owning plan when this action is complete.
 		 */
 		virtual void EndAction(IWorldState* WorldState) = 0;
+
+		/**
+		 * Return the 'distance' between this action and the next.
+		 * This is typically proportional to the number of requirements yet to
+		 * be fulfilled in order for this action's effects to satisfy the
+		 * next action's pre-conditions.
+		 */
+		virtual float GetDistanceFromNextAction(IAction* NextAction) const = 0;
 	};
 }

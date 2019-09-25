@@ -126,14 +126,19 @@
     <ClInclude Include="ActionBasic.h" />
     <ClInclude Include="ActionEffectBasic.h" />
     <ClInclude Include="ActionPreConditionBasic.h" />
+    <ClInclude Include="AStar.h" />
     <ClInclude Include="IAction.h" />
     <ClInclude Include="IActionEffect.h" />
     <ClInclude Include="IActionPreCondition.h" />
+    <ClInclude Include="IAStarNode.h" />
     <ClInclude Include="IGoal.h" />
     <ClInclude Include="IPlanner.h" />
     <ClInclude Include="IWorldState.h" />
     <ClInclude Include="PlannerBasic.h" />
     <ClInclude Include="WorldStateBasic.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AStar.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

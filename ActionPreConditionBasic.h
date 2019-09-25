@@ -21,6 +21,8 @@ namespace GOAP
 		virtual bool IsConditionMet(IWorldState* WorldState) const override;
 		// ~ End IActionPreCondition Interface
 
+		float GetNumConditionsNotMet(IWorldState* WorldState) const;
+
 	private:
 		const std::unordered_map<std::string, bool> Requirements;
 	};

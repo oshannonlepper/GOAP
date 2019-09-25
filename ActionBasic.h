@@ -3,11 +3,12 @@
 #include <vector>
 
 #include "IAction.h"
+#include "IAStarNode.h"
 
 namespace GOAP
 {
-	struct IActionEffect;
-	struct IActionPreCondition;
+	class CActionEffectBasic;
+	class CActionPreConditionBasic;
 }
 
 namespace GOAP
@@ -15,7 +16,7 @@ namespace GOAP
 	/**
 	 * Basic implementation of IAction.
 	 */
-	class CActionBasic : public IAction
+	class CActionBasic : public IAction, public IAStarNode
 	{
 	public:
 		CActionBasic() = default;
@@ -25,7 +26,7 @@ namespace GOAP
 		{
 		}
 
-		CActionBasic(float InScore, const std::vector<IActionPreCondition*>& InPreConditions, const std::vector<IActionEffect*>& InEffects)
+		CActionBasic(float InScore, const std::vector<CActionPreConditionBasic*>& InPreConditions, const std::vector<CActionEffectBasic*>& InEffects)
 			: Score(InScore)
 			, PreConditions(InPreConditions)
 			, Effects(InEffects)
@@ -41,15 +42,26 @@ namespace GOAP
 
 		virtual void BeginAction() override {}
 		virtual bool UpdateAction(float DeltaTime) override { return false; }
-
 		virtual void EndAction(IWorldState* WorldState) override;
+
+		virtual float GetDistanceFromNextAction(IAction* NextAction) const override;
 		// ~ End IAction Interface
+
+		// ~ Begin IAStarNode Interface
+		virtual std::size_t GetNumNeighbours() const override { return 0; }
+		virtual IAStarNode* GetNeighbour(std::size_t Index) const override;
+		virtual float GetDistance(IAStarNode* OtherNode) const override;
+		// ~ End IAStarNode Interface
+
+		void AddNeighbouringAction(CActionBasic* OtherAction);
 
 	private:
 
 		// The score of this action, acts as a cost.
 		const float Score = 0.0f;
-		const std::vector<IActionPreCondition*> PreConditions;
-		const std::vector<IActionEffect*> Effects;
+		const std::vector<CActionPreConditionBasic*> PreConditions;
+		const std::vector<CActionEffectBasic*> Effects;
+
+		std::vector<IAStarNode*> Neighbours;
 	};
 }

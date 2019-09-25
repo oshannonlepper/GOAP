@@ -1,7 +1,10 @@
 #include "ActionBasic.h"
 
-#include "IActionEffect.h"
-#include "IActionPreCondition.h"
+#include "ActionEffectBasic.h"
+#include "ActionPreConditionBasic.h"
+#include "WorldStateBasic.h"
+
+#include <cassert>
 
 namespace GOAP
 {
@@ -20,9 +23,53 @@ namespace GOAP
 
 	void CActionBasic::EndAction(IWorldState* WorldState)
 	{
-		for (const IActionEffect* const Effect : Effects)
+		for (const CActionEffectBasic* const Effect : Effects)
 		{
 			Effect->Apply(WorldState);
 		}
+	}
+
+	float CActionBasic::GetDistanceFromNextAction(IAction* NextAction) const
+	{
+		// TODO - this is trying to do the heuristic logic, move to heuristic functor?
+		// heuristic = number of unsatisfied world state properties
+
+		// compare this action effects with other action preconditions
+		// if they match, then they are neighbours (think dominoes)
+
+		float ReturnValue = 0.0f;
+
+		CActionBasic* OtherNodeAsAction = static_cast<CActionBasic*>(NextAction);
+
+		CWorldStateBasic TransientWorldState;
+		for (CActionEffectBasic* Effect : Effects)
+		{
+			Effect->Apply(&TransientWorldState);
+		}
+
+		for (CActionPreConditionBasic* PreCondition : PreConditions)
+		{
+			ReturnValue += PreCondition->GetNumConditionsNotMet(&TransientWorldState);
+		}
+
+		return ReturnValue;
+	}
+
+	IAStarNode* CActionBasic::GetNeighbour(std::size_t Index) const
+	{
+		assert(Index < Neighbours.size());
+
+		return Neighbours[Index];
+	}
+
+	float CActionBasic::GetDistance(IAStarNode* OtherNode) const
+	{
+		CActionBasic* OtherNodeAsAction = static_cast<CActionBasic*>(OtherNode);
+		return GetDistanceFromNextAction(OtherNodeAsAction);
+	}
+
+	void CActionBasic::AddNeighbouringAction(CActionBasic* OtherAction)
+	{
+		Neighbours.push_back(OtherAction);
 	}
 }
